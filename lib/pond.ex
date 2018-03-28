@@ -35,7 +35,7 @@ defmodule Pond do
   """
   @spec pond(state :: any(), func :: function()) :: function()
   def pond(state, func) when is_function(func) do
-    arity = :erlang.fun_info(func)[:arity]
+    {:arity, arity} = :erlang.fun_info(func, :arity)
     pond_fix(arity, func).(state)
   end
 
