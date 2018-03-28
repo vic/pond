@@ -29,9 +29,11 @@ to be used by many *clients* something much more complex than just maintaining s
 
 Some useful resources:
 
-[python generators thread on EF](https://elixirforum.com/t/python-generators-equivalent/2806/10)
-
 [spawn or not](http://theerlangelist.com/article/spawn_or_not)
+
+[fsm](https://github.com/sasa1977/fsm)
+
+[python generators thread on EF](https://elixirforum.com/t/python-generators-equivalent/2806/10)
 
 ## `import Pond`
 
