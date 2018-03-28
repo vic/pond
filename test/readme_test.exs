@@ -1,6 +1,6 @@
-defmodule Pond.ModuledocsTest do
+defmodule Pond.ReadmeTest do
   use ExUnit.Case
   use Pond
+  import Pond.Readme
   doctest Pond.Readme
-  doctest Pond
 end
