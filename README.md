@@ -3,6 +3,9 @@
 [![Travis](https://img.shields.io/travis/vic/pond.svg)](https://travis-ci.org/vic/pond)
 [![Hex.pm](https://img.shields.io/hexpm/v/pond.svg?style=flat-square)](https://hexdocs.pm/pond)
 
+
+![Monet](https://upload.wikimedia.org/wikipedia/commons/4/43/Claude_Monet_-_Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg)
+
 Pond is an Elixir library for creating functions that are able to keep state between 
 invocations while still being functionally pure.
 
