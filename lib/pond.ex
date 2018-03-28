@@ -3,6 +3,13 @@ defmodule Pond do
   Documentation for Pond.
   """
 
+  @doc false
+  defmacro __using__(_) do
+    quote do
+      import unquote(__MODULE__).Core
+    end
+  end
+
   @doc """
   Hello world.
 
