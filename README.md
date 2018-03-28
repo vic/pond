@@ -30,7 +30,7 @@ Some useful resources:
 
 [spawn or not](http://theerlangelist.com/article/spawn_or_not)
 
-## `use Pond`
+## `import Pond`
 
 A *pond* is created by combining an initial state and a function.
 

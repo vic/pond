@@ -7,13 +7,6 @@ defmodule Pond do
   See the README.md file for an usage guide.
   """
 
-  @doc false
-  defmacro __using__(_) do
-    quote do
-      import unquote(__MODULE__)
-    end
-  end
-
   def pond(state, func) when is_function(func) do
     arity = :erlang.fun_info(func)[:arity]
     pond_fix(arity, func).(state)

@@ -1,5 +1,5 @@
 defmodule Pond.Readme do
-  use Pond
+  import Pond
   import Pond.Next
 
   @readme Path.expand("../../README.md", __DIR__)
