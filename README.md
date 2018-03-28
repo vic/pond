@@ -102,7 +102,7 @@ increasing `m` and automatically calls it:
 
 ```elixir
 def growing(ints) do
-  pond({[1, 2, 3], 1}, fn
+  pond({ints, 1}, fn
     pond, {[n | rest], m}  ->
       { n * m, pond.({rest, m}) }
     pond, {[], m} ->
