@@ -36,7 +36,7 @@ A *pond* is created by combining an initial state and a function.
 
 `pond/2` returns a function that can be invoked without explicitly
 giving a state to it. If you are curious about how it's done, 
-[Pond's core is just a simple closure](https://github.com/vic/pond/tree/master/pond.ex)
+[Pond's core is just a simple closure](https://github.com/vic/pond/tree/master/lib/pond.ex)
 
 ##### Hello
 
