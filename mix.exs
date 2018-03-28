@@ -7,7 +7,7 @@ defmodule Pond.MixProject do
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Pond",
-      description: description(),
+      description: "State aware Elixir functions without spawning processes",
       version: version(),
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),
@@ -23,13 +23,6 @@ defmodule Pond.MixProject do
     changelog = File.read!(file)
     [_, version] = Regex.scan(~r/## v(.*)\n/, changelog) |> List.first
     version
-  end
-
-  defp description do
-    file = Path.expand("README.md", __DIR__)
-    [line] = File.stream!(file, [:read]) |> Enum.take(1)
-    [_, description] = Regex.scan(~r/.*? - (.*)\n/, line) |> List.first
-    description
   end
 
   defp package do
