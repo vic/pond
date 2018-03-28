@@ -163,7 +163,7 @@ steps.
 
 For example, `next/2` is:
 
-```
+```elixir
 def next(fun, arg), do: fun.(arg)
 ```
 
