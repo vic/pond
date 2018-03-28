@@ -201,11 +201,11 @@ The `foo` *pond* starts with an initial `:idle` state. Awaiting to be called
 with `(0, sink)`. This, in Callbag, is known as the handshake part of the
 protocol, the source must then greet (`0`) back the sink.
 
-In our *pond*, upon being greeted by a skink `0`, we update the state `source.(sink)` to
+In our *pond*, upon being greeted by a sink, we update the state `source.(sink)` to
 save a reference to the sink that is greeting us, and then just greet back `sink.(0, source)`.
 
 Once the handshake is complete, the sink can demand (`1`) data from us when it feels like. 
-We say `foo` is a *pullable* stream.
+We say `foo` is a *pullable source* stream.
 
 Sometimes, a pullable stream can take `(1, data)`, where data can be things like 
 the amount of data desired by the sink (like GenStage's demand). 
@@ -276,8 +276,10 @@ iex> source = foo()
 [:hello, :world]
 ```
 
-This way you could use `Pond` to create Elixir Callbags that dont spawn
-a new process for *every* operation.
+This way you could use `Pond` to create Elixir reactive streams.
+Just implement functions that follow the Callbag spec. And by
+using Pond they dont necessarily need to spawn a new process 
+for each combinator.
 
 ## Installation
 
