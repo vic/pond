@@ -29,8 +29,8 @@ defmodule Pond do
       ...> assert {:hello, f} = f.()
       ...> assert {:world, f} = f.()
       ...>
-      ...> :erlang.fun_info(f)[:arity]
-      0
+      ...> :erlang.fun_info(f, :arity)
+      {:arity, 0}
 
   """
   @spec pond(state :: any(), func :: function()) :: function()
