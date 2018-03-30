@@ -97,9 +97,9 @@ defmodule Pond.Rec do
       ...> fun.(3)
       [:one, :two, 3]
 
-  ### See also
 
-  `rec/2`
+  See `rec/2` for other ways to create recorders.
+  And its last example for how to play records.
   """
 
   @spec rec(function()) :: function()
@@ -170,8 +170,25 @@ defmodule Pond.Rec do
       ...> fun
       nil
 
+  # Playing a record
+
+      iex> x = pond([], fn
+      ...>   _pond, acc, value when length(acc) == 2 ->
+      ...>     [value | acc] |> Enum.reverse
+      ...>   pond, acc, value ->
+      ...>     pond.([value | acc])
+      ...> end)
+      ...>
+      ...> tape = %Rec{fun: x, next: [[:hello], [:beautiful], [:world]]}
+      ...> played = rec(tape, :play)
+      ...>
+      ...> assert %Rec{value: value, next: []} = played
+      ...> value
+      [:hello, :beautiful, :world]
+
   """
 
+  @spec rec(rec :: t(), action :: :play) :: t()
   @spec rec(fun :: function(), action :: :stop) :: t()
   @spec rec(arity :: integer(), action :: :rec) :: function()
   @spec rec(fun :: function(), action :: :rec | :auto) :: function()
@@ -195,6 +212,13 @@ defmodule Pond.Rec do
   def rec(rec, :stop) when is_function(rec) do
     stops = fun_args(rec, @rec_stop)
     apply(rec, stops)
+  end
+
+  def rec(%Rec{fun: fun, next: next}, :play) do
+    rec = rec(fun, :auto)
+    next
+    |> Enum.reduce(rec, fn args, f -> apply(f, args) end)
+    |> rec(:stop)
   end
 
   defp fun_args(fun, value) do
