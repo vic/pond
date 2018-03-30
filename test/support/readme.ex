@@ -2,10 +2,6 @@ defmodule Pond.Readme do
   import Pond
   import Pond.Next
 
-  @readme Path.expand("../../README.md", __DIR__)
-  @external_resource @readme
-  @moduledoc File.read!(@readme)
-
   def growing(ints) do
     pond({ints, 1}, fn
       pond, {[n | rest], m}  ->

@@ -1,11 +1,7 @@
 defmodule Pond do
-  @moduledoc ~S"""
-  Pond.
-
-  `import Pond`
-
-  See the README.md file for an usage guide.
-  """
+  @readme Path.expand("../README.md", __DIR__)
+  @external_resource @readme
+  @moduledoc File.read!(@readme)
 
   @doc ~S"""
   Create a *pond* from an initial state and a handler function.
