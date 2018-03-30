@@ -9,6 +9,7 @@ in a way that is useful to know which version you can upgrade safely.
 
 ##### Enhancements
 
+   * Added `Pond.Rec`, a function invocations recorder using Pond.
    * Improved `Pond.pond/2` and `Pond.Next` documentation.
 
 ## v0.1.1
