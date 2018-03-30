@@ -99,7 +99,7 @@ itself and for the user the state is abstracted away.
 
 ### Elixir Generators
 
-Let's create a function that cycles an array of ints but on every cycle
+Let's create a function that cycles a list of ints but on every cycle
 increments the number of decimal positions.
 
 In the code bellow, note that the `[]` stop condition creates a new pond
