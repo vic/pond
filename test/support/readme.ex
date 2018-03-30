@@ -4,8 +4,9 @@ defmodule Pond.Readme do
 
   def growing(ints) do
     pond({ints, 1}, fn
-      pond, {[n | rest], m}  ->
-        { n * m, pond.({rest, m}) }
+      pond, {[n | rest], m} ->
+        {n * m, pond.({rest, m})}
+
       pond, {[], m} ->
         pond.({ints, m * 10}).()
     end)
@@ -15,6 +16,7 @@ defmodule Pond.Readme do
     pond(acc, fn
       _, acc, :halt ->
         acc
+
       pond, acc, value ->
         pond.(f.(acc, value))
     end)
@@ -24,7 +26,7 @@ defmodule Pond.Readme do
     pond(:idle, fn
       source, :idle, 0, sink ->
         source = source.(sink)
-      sink.(0, source)
+        sink.(0, source)
 
       _source, sink, 1, _data ->
         sink
@@ -38,14 +40,16 @@ defmodule Pond.Readme do
     pond(:idle, fn
       sink, :idle, 0, source ->
         sink = sink.([])
-      source.(0, sink)
+        source.(0, sink)
+
       _sink, [], 0, source_sink ->
         source_sink
+
       sink, acc, 1, data ->
         sink.([data | acc])
+
       _sink, acc, 2, nil ->
-        acc |> Enum.reverse
+        acc |> Enum.reverse()
     end)
   end
-
 end

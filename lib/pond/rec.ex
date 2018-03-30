@@ -1,5 +1,4 @@
 defmodule Pond.Rec do
-
   @moduledoc ~S"""
   Function invocations recorder.
   """
@@ -216,6 +215,7 @@ defmodule Pond.Rec do
 
   def rec(%Rec{fun: fun, next: next}, :play) do
     rec = rec(fun, :auto)
+
     next
     |> Enum.reduce(rec, fn args, f -> apply(f, args) end)
     |> rec(:stop)
@@ -234,28 +234,29 @@ defmodule Pond.Rec do
   Enum.map(0..10, fn arity ->
     args = Macro.generate_arguments(arity, __MODULE__)
     stops = Enum.map(args, fn _ -> @rec_stop end)
+
     defp rec_fun(unquote(arity)) do
       fn
         _pond, rec = %Rec{next: nxt}, unquote_splicing(stops) ->
-          %Rec{ rec | next: Enum.reverse(nxt) }
+          %Rec{rec | next: Enum.reverse(nxt)}
 
         _pond, f, unquote_splicing(stops) when is_function(f, unquote(arity)) ->
           %Rec{fun: f}
 
         pond, rec = %Rec{next: nxt}, unquote_splicing(args) ->
-          pond.(%Rec{ rec | next: [unquote(args) | nxt] })
+          pond.(%Rec{rec | next: [unquote(args) | nxt]})
 
         pond, f, unquote_splicing(args) when is_function(f, unquote(arity)) ->
           value = f.(unquote_splicing(args))
+
           case value do
             vf when is_function(vf, unquote(arity)) ->
               pond.(vf)
+
             _ ->
               pond.(%Rec{fun: f, value: value})
           end
-
       end
     end
   end)
-
 end

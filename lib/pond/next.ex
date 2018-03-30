@@ -1,5 +1,4 @@
 defmodule Pond.Next do
-
   @doc_next1 ~S"""
   Calls `func`.
 
@@ -41,10 +40,9 @@ defmodule Pond.Next do
 
   Enum.map(0..10, fn arity ->
     args = Macro.generate_arguments(arity, __MODULE__)
-    @doc (if arity > 0, do: @doc_next, else: @doc_next1)
+    @doc if arity > 0, do: @doc_next, else: @doc_next1
     def next(func, unquote_splicing(args)) when is_function(func, unquote(arity)) do
       func.(unquote_splicing(args))
     end
   end)
-
 end

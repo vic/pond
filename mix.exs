@@ -21,7 +21,7 @@ defmodule Pond.MixProject do
   defp version do
     file = Path.expand("CHANGELOG.md", __DIR__)
     changelog = File.read!(file)
-    [_, version] = Regex.scan(~r/## v(.*)\n/, changelog) |> List.first
+    [_, version] = Regex.scan(~r/## v(.*)\n/, changelog) |> List.first()
     version
   end
 
