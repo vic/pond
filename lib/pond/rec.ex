@@ -6,7 +6,7 @@ defmodule Pond.Rec do
 
   alias __MODULE__
 
-  @type rec_action :: :auto | :stop | :rec
+  @type t :: %Rec{fun: function(), next: list(list(term()))}
   @rec_stop {Rec, :stop}
 
   defstruct [:fun, :value, {:next, []}]
@@ -110,17 +110,16 @@ defmodule Pond.Rec do
 
   # Recording
 
-  There are two ways to record function invocations.
-
   ##### `rec(fun, :auto)`
 
-  The first way is the one in the example of `rec/1`.
   Calling `rec/1` is equivalent to `rec(fun, :auto)`.
 
   That is, the recorder will just recursively
   invoke the result value while it keeps being a same
   arity function. Otherwise the recorder starts
   collecting subsequent invocation arguments.
+
+  See the documentation example of `rec/1`.
 
   ##### `rec(fun, :rec)`
 
@@ -145,9 +144,37 @@ defmodule Pond.Rec do
       ...> fun
       &IO.puts/1
 
+
+  ##### `rec(arity, :rec)`
+
+  Another way to create a recorder is by simply
+  specifying the function arity.
+
+  This way you can create a recorder and hand it
+  to some other function to simply use it. Then
+  you could stop the recording and get what the
+  other function called on it.
+
+      iex> tape =
+      ...>   rec(2, :rec)
+      ...>   |> next("What", "a")
+      ...>   |> next("wonderful", "world")
+      ...>   |> rec(:stop)
+      ...>
+      ...> assert %Rec{value: nil} = tape
+      ...>
+      ...> %Rec{next: next} = tape
+      ...> assert [["What", "a"], ["wonderful", "world"]] = next
+      ...>
+      ...> %Rec{fun: fun} = tape
+      ...> fun
+      nil
+
   """
 
-  @spec rec(function(), rec_action()) :: function()
+  @spec rec(fun :: function(), action :: :stop) :: t()
+  @spec rec(arity :: integer(), action :: :rec) :: function()
+  @spec rec(fun :: function(), action :: :rec | :auto) :: function()
   def rec(fun, action)
 
   def rec(fun, :auto) when is_function(fun) do
@@ -158,6 +185,11 @@ defmodule Pond.Rec do
   def rec(fun, :rec) when is_function(fun) do
     rec = fun |> fun_arity |> rec_fun
     Pond.pond(%Rec{fun: fun}, rec)
+  end
+
+  def rec(arity, :rec) when is_integer(arity) do
+    rec = rec_fun(arity)
+    Pond.pond(%Rec{}, rec)
   end
 
   def rec(rec, :stop) when is_function(rec) do
