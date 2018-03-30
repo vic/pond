@@ -156,14 +156,14 @@ defmodule Pond.Rec do
 
       iex> tape =
       ...>   rec(2, :rec)
-      ...>   |> next("What", "a")
-      ...>   |> next("wonderful", "world")
+      ...>   |> next("Somewhere", "over")
+      ...>   |> next("the", "rainbow")
       ...>   |> rec(:stop)
       ...>
       ...> assert %Rec{value: nil} = tape
       ...>
       ...> %Rec{next: next} = tape
-      ...> assert [["What", "a"], ["wonderful", "world"]] = next
+      ...> assert [["Somewhere", "over"], ["the", "rainbow"]] = next
       ...>
       ...> %Rec{fun: fun} = tape
       ...> fun
