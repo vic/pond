@@ -15,11 +15,11 @@ defmodule Pond.Readme do
     end)
   end
 
-  def scan(f, acc) do
+  def reduce(f, acc) do
     pond(acc, fn
-      _, acc, :run ->
+      _, acc, :halt ->
         acc
-      pond, acc, value when is_integer(value) ->
+      pond, acc, value ->
         pond.(f.(acc, value))
     end)
   end

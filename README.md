@@ -97,7 +97,7 @@ the same as when you `Map.put` something and get a *new* map. The nice
 thing about this is, the state is managed internally by the pond
 itself and for the user the state is abstracted away.
 
-##### Ever growing
+### Elixir Generators
 
 Let's create a function that cycles an array of ints but on every cycle
 increments the number of decimal positions.
@@ -115,6 +115,9 @@ def growing(ints) do
   end)
 end
 ```
+
+The result of calling `growing/1` is a *Generator* function that
+will produce values each time it's called.
 
 ```elixir
 iex> f = growing([1, 2, 3])
@@ -142,17 +145,18 @@ Up to now, if you notice our previous examples, all of them yield a
 function with zero arity `f.()`. However, you can create a *pond* that
 takes any number of arguments.
 
-Our next example, `scan`, yields a function that will take a single argument.
-Either the `:run` atom to extract the state or a value to be accumulated in
-the state.
+Our next example, `reduce`, yields a function that will take a single argument.
+Either the `:halt` atom to extract the current state or any other value to
+produce the next state from calling `reducer.(acc, value)`.
+
 
 ```elixir
-def scan(f, acc) do
+def reduce(reducer, acc) do
   pond(acc, fn
-    _, acc, :run ->
+    _, acc, :result ->
       acc
     pond, acc, value ->
-      pond.(f.(acc, value))
+      pond.(reducer.(acc, value))
   end)
 end
 ```
@@ -160,23 +164,24 @@ end
 The `Pond.Next` module provides `next`. A convenience that simply takes a function 
 as first argument and invokes it with all remaining arguments.
 
-This allows us to nicely pipe stateful functions as they are being produced from previous
-steps.
-
 For example, `next/2` is:
 
 ```elixir
 def next(fun, arg), do: fun.(arg)
 ```
 
+This allows us to nicely pipe stateful functions as they are being produced from previous
+steps.
+
+
 ```elixir
 iex> import Pond.Next
 ...> (&Kernel.+/2)
-...> |> scan(0)
+...> |> reduce(0)
 ...> |> next(10)
 ...> |> next(3)
 ...> |> next(200)
-...> |> next(:run)
+...> |> next(:halt)
 213
 ```
 
