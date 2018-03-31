@@ -1,4 +1,7 @@
 defmodule Pond do
+
+  alias __MODULE__.App
+
   @readme Path.expand("../README.md", __DIR__)
   @external_resource @readme
   @moduledoc File.read!(@readme)
@@ -29,17 +32,17 @@ defmodule Pond do
       {:arity, 0}
 
   """
-  @spec pond(state :: any(), func :: function()) :: function()
-  def pond(state, func) when is_function(func) do
-    {:arity, arity} = :erlang.fun_info(func, :arity)
-    pond_fix(arity, func).(state)
+  @spec pond(state :: any(), app :: App.t()) :: function()
+  def pond(state, app) do
+    arity = App.arity(app)
+    pond_fix(arity, app).(state)
   end
 
-  defp pond_fix(arity, func) when arity > 1 do
+  defp pond_fix(arity, app) when arity > 1 do
     arity = arity - 2
 
     fix = fn fix ->
-      fn state -> pond_fun(arity, func, fix.(fix), state) end
+      fn state -> pond_fun(arity, app, fix.(fix), state) end
     end
 
     fix.(fix)
@@ -48,9 +51,9 @@ defmodule Pond do
   Enum.map(0..10, fn arity ->
     args = Macro.generate_arguments(arity, __MODULE__)
 
-    defp pond_fun(unquote(arity), func, fix, state) do
+    defp pond_fun(unquote(arity), app, fix, state) do
       fn unquote_splicing(args) ->
-        func.(fix, state, unquote_splicing(args))
+        App.apply(app, [fix, state, unquote_splicing(args)])
       end
     end
   end)
