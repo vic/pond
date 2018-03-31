@@ -10,8 +10,7 @@ defmodule Pond.App do
   alias Pond.Applicative
   import Kernel, except: [apply: 2]
 
-  @typedoc "Anything implementing the `Pond.Applicative` protocol"
-  @type t :: term()
+  @type t :: Applicative.t()
 
   @doc ~S"""
   Returns the number of arguments that an applicative can take.
@@ -43,7 +42,13 @@ defmodule Pond.App do
 end
 
 defprotocol Pond.Applicative do
+  @typedoc "Anything implementing the `Pond.Applicative` protocol"
+  @type t :: term()
+
+  @spec arity(t()) :: integer()
   def arity(app)
+
+  @spec apply(t(), list()) :: term()
   def apply(app, args)
 end
 
