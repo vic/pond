@@ -135,7 +135,7 @@ iex> f = growing([1, 2, 3])
 200
 ```
 
-### Multiple Arguments
+### Piping Functions
 
 So, basically a *pond* is a function that is already capturing it's
 state and is just waiting to be called with some other arguments from
@@ -153,7 +153,7 @@ produce the next state from calling `reducer.(acc, value)`.
 ```elixir
 def reduce(reducer, acc) do
   pond(acc, fn
-    _, acc, :result ->
+    _, acc, :halt ->
       acc
     pond, acc, value ->
       pond.(reducer.(acc, value))
@@ -184,6 +184,39 @@ iex> import Pond.Next
 ...> |> next(:halt)
 213
 ```
+
+### Piping with State Accumulators
+
+If you noticed in our last example, calling the `reduce` pond will always return another
+function (except when called with `:halt`).
+That's why we can pipe every function using `Pond.Next`.
+
+However other ponds can also return a current value, like our previous `growing` example.
+
+For *pond*s that follow the convention of returning a tuple like `{value, next_fun}`,
+we can use the module `Pond.Acc` in adition to `Pond.Next` to build pipes.
+
+
+For example, let's pipe only two calls to our `growing` generator and accumulate its
+values into a list.
+
+```elixir
+
+iex> alias Pond.Acc
+...> f = growing([1, 2, 3])
+...>
+...> f
+...> |> Acc.into(Acc.list())
+...> |> next()
+...> |> next()
+...> |> Acc.value()
+[1, 2]
+```
+
+As you see, we combine the generator with an state accumulator, in this case `Acc.list()`.
+`Pond.Acc` provides some other useful accumulators, and you can build your own if needed.
+Calling `Acc.value()` will extract the current value from the state accumulator.
+
 
 ### Elixir Callbags
 
