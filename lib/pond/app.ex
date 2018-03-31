@@ -7,27 +7,28 @@ defmodule Pond.App do
   take arguments and produce another value.
   """
 
-  alias __MODULE__.Protocol
+  alias Pond.Applicative
   import Kernel, except: [apply: 2]
 
-  @typep app :: term()
+  @typedoc "Anything implementing the `Pond.Applicative` protocol"
+  @type t :: term()
 
   @doc ~S"""
   Returns the number of arguments that an applicative can take.
   """
-  @spec arity(app()) :: integer()
-  def arity(app), do: Protocol.arity(app)
+  @spec arity(t()) :: integer()
+  def arity(app), do: Applicative.arity(app)
 
   @doc ~S"""
   Applies arguments into an applicative.
   """
-  @spec apply(app(), list()) :: term()
-  def apply(app, args), do: Protocol.apply(app, args)
+  @spec apply(t(), list()) :: term()
+  def apply(app, args), do: Applicative.apply(app, args)
 
   @doc ~S"""
   Creates a function from an applicative.
   """
-  @spec to_fun(app()) :: fun()
+  @spec to_fun(t()) :: fun()
   def to_fun(app)
   def to_fun(fun) when is_function(fun), do: fun
   def to_fun(app), do: app_fun(app, arity(app))
@@ -41,14 +42,13 @@ defmodule Pond.App do
 
 end
 
-defprotocol Pond.App.Protocol do
-  @doc false
+defprotocol Pond.Applicative do
   def arity(app)
   def apply(app, args)
 end
 
 
-defimpl Pond.App.Protocol, for: Function do
+defimpl Pond.Applicative, for: Function do
   def arity(fun) do
     {:arity, arity} = :erlang.fun_info(fun, :arity)
     arity
@@ -59,7 +59,7 @@ defimpl Pond.App.Protocol, for: Function do
   end
 end
 
-defimpl Pond.App.Protocol, for: Tuple do
+defimpl Pond.Applicative, for: Tuple do
   alias Pond.App
 
   def arity({_acc, app}) do
