@@ -12,7 +12,7 @@ can upgrade safely.
 
   * Added `Pond.App` to so that `Pond.Next` can work not only
     with functions and two-tuples used by `Pond.Acc`
-  * Added `Pond.Acc` to maintain state while pinping with `Pond.Next`.
+  * Added `Pond.Acc` to maintain state while piping with `Pond.Next`.
   * Added `Pond.Rec`, a function invocations recorder using Pond.
   * Improved `Pond.pond/2` and `Pond.Next` documentation.
 

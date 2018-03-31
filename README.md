@@ -189,13 +189,14 @@ iex> import Pond.Next
 
 If you noticed in our last example, calling the `reduce` pond will always return another
 function (except when called with `:halt`).
-That's why we can pipe every function using `Pond.Next`.
+That's why we could pipe every function using `Pond.Next`.
 
-However other ponds can also return a current value, like our previous `growing` example.
+However other functions can also return a current value, like our previous `growing` example,
+that will return tuples like `{value, next_fun}`. 
 
-For *pond*s that follow the convention of returning a tuple like `{value, next_fun}`,
-we can use the module `Pond.Acc` in adition to `Pond.Next` to build pipes.
-
+The `Pond.Acc.into/2` function creates a tuple `{acc_pond, next_pond}`, and these tuples 
+implement the `Pond.Applicative` protocol.
+Pond Applicatives are able to be piped naturally using `Pond.Next` functions.
 
 For example, let's pipe only two calls to our `growing` generator and accumulate its
 values into a list.
@@ -214,8 +215,14 @@ iex> alias Pond.Acc
 ```
 
 As you see, we combine the generator with an state accumulator, in this case `Acc.list()`.
-`Pond.Acc` provides some other useful accumulators, and you can build your own if needed.
-Calling `Acc.value()` will extract the current value from the state accumulator.
+Calling `Acc.value()` at the end will extract the current value from the state accumulator.
+
+`Pond.Acc` accumulators are just *pond*s themselves, and you can use them as reference if
+you really need to create your own state accumulators.
+
+If your functions happen to return things other than just a function or a `{state, next_fun}`
+tuple, and you want to pipe using `next`, all you need is to make your result structure 
+implement the `Pond.Applicative` protocol.
 
 
 ### Elixir Callbags

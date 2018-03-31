@@ -67,7 +67,8 @@ end
 defimpl Pond.Applicative, for: Tuple do
   alias Pond.App
 
-  def arity({_acc, app}) do
+  def arity({acc, app}) do
+    {:ok, 1} = {:ok, App.arity(acc)}
     App.arity(app)
   end
 
