@@ -8,7 +8,7 @@ defmodule Pond.Acc do
   @moduledoc ~S"""
   Functions for accumulating state.
 
-  State accumulators are useful when used with
+  State accumulators are useful when combined with
   `Pond.Next` for piping while preserving previous
   invocations state.
 
