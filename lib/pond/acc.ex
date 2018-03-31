@@ -30,23 +30,34 @@ defmodule Pond.Acc do
       [:hello, :world]
 
 
-  State accummulators work for functions that follow
+  `Pond.Next` can use this module's functions in order
+  to accumulate state for functions that follow
   the convention of returning `{value, next_fun}`.
 
   This module provides some accumulators for common
   cases. However, if your function return a different
   structure you can easily use these as reference to
   build your own.
+
+
+  Accumulators are themselves just *pond*s. So they
+  can be used independently. For example:
+
+      iex> f = Acc.list()
+      ...> f = f.(:hello)
+      ...> f = f.(:world)
+      ...> Acc.value(f)
+      [:hello, :world]
   """
 
   @type pond :: (... -> term())
   @type acc :: (term() -> term())
   @type acc_pond :: (term() -> acc())
-  @type acc_and_pond :: {acc(), pond()}
+  @type acc_and_pond :: {acc_pond(), pond()}
   @type reducer :: (term(), term() -> term())
 
   @doc ~S"""
-  Combines a function and an accumulator in a tuple.
+  Combines a function and an accumulator in a tuple as expected by `Pond.Next`.
 
       iex> f = pond(:hello, fn
       ...>   pond, state = :hello ->
@@ -60,21 +71,27 @@ defmodule Pond.Acc do
       ...> assert is_function(acc, 1)
       true
   """
-  @spec into(pond :: pond(), acc :: acc()) :: acc_and_pond()
+  @spec into(pond :: pond(), acc :: acc_pond()) :: acc_and_pond()
   def into(pond, acc) do
     {acc, pond}
   end
 
   @doc ~S"""
-  Extracts the current value from the accumulator in tuple.
+  Extracts the current value from the accumulator.
 
   Normally, this will be the last step of a pipe, in order
   to extract the accumulated state.
 
   See this module doc.
   """
-  @spec value(acc_and_pond()) :: term()
-  def value({acc, _pond}) do
+  @spec value(acc() | acc_and_pond()) :: term()
+  def value(acc)
+
+  def value({acc, _pond}) when is_function(acc, 1) do
+    acc.(@value)
+  end
+
+  def value(acc) when is_function(acc, 1) do
     acc.(@value)
   end
 
