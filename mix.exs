@@ -1,13 +1,20 @@
 defmodule Pond.MixProject do
   use Mix.Project
 
+  @description """
+  Pond is an Elixir library for creating state handling functions without spawning processes.
+
+  Pond functions are same-process, referentially transparent functions, that let you implement
+  Finite State Machines, Generators, (push/pull) Reactive Streams, etc.
+  """
+
   def project do
     [
       app: :pond,
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
       name: "Pond",
-      description: "State aware Elixir functions without spawning processes",
+      description: @description,
       version: version(),
       elixirc_paths: elixirc_paths(Mix.env()),
       package: package(),

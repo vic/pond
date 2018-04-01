@@ -10,10 +10,9 @@ can upgrade safely.
 
 ##### Enhancements
 
-  * Added `Pond.App` to so that `Pond.Next` can work not only
+  * Added `Pond.App` to so that `Pond.Next` can pipe not only
     with functions and two-tuples.
   * Added `Pond.Acc` to maintain state while piping with `Pond.Next`.
-  * Added `Pond.Rec`, a function invocations recorder using Pond.
   * Improved `Pond.pond/2` and `Pond.Next` documentation.
 
 ## v0.1.1

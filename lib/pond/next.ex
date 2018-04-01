@@ -70,5 +70,4 @@ defmodule Pond.Next do
       Pond.App.apply(app, unquote(args))
     end
   end)
-
 end

@@ -1,5 +1,4 @@
 defmodule Pond do
-
   alias __MODULE__.App
 
   @readme Path.expand("../README.md", __DIR__)
@@ -55,6 +54,7 @@ defmodule Pond do
       fn
         unquote_splicing(args) when is_function(app, unquote(arity)) ->
           app.(fix, state, unquote_splicing(args))
+
         unquote_splicing(args) ->
           App.apply(app, [fix, state, unquote_splicing(args)])
       end

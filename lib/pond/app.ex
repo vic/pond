@@ -1,5 +1,4 @@
 defmodule Pond.App do
-
   @moduledoc ~S"""
   Pond Applicative.
 
@@ -34,11 +33,11 @@ defmodule Pond.App do
 
   Enum.map(0..10, fn arity ->
     args = Macro.generate_arguments(arity, __MODULE__)
+
     defp app_fun(app, unquote(arity)) do
       fn unquote_splicing(args) -> apply(app, unquote(args)) end
     end
   end)
-
 end
 
 defprotocol Pond.Applicative do
@@ -51,7 +50,6 @@ defprotocol Pond.Applicative do
   @spec apply(t(), list()) :: term()
   def apply(app, args)
 end
-
 
 defimpl Pond.Applicative, for: Function do
   def arity(fun) do

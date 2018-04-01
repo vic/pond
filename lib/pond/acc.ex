@@ -1,8 +1,7 @@
 defmodule Pond.Acc do
-
   import Pond
 
-  @idle  {__MODULE__, :idle}
+  @idle {__MODULE__, :idle}
   @value {__MODULE__, :value}
 
   @moduledoc ~S"""
@@ -108,15 +107,17 @@ defmodule Pond.Acc do
     pond(@idle, fn
       _pond, @idle, @value ->
         []
+
       _pond, state, @value ->
-        state |> Enum.reverse
+        state |> Enum.reverse()
+
       pond, @idle, state ->
         pond.([state])
+
       pond, acc, state ->
         pond.([state | acc])
     end)
   end
-
 
   @doc ~S"""
   Creates an accumulator that stores only the
@@ -142,8 +143,10 @@ defmodule Pond.Acc do
     pond(@idle, fn
       _pond, @idle, @value ->
         nil
+
       _pond, state, @value ->
         state
+
       pond, _state, value ->
         pond.(value)
     end)
@@ -171,10 +174,13 @@ defmodule Pond.Acc do
     pond(@idle, fn
       _pond, @idle, @value ->
         nil
+
       _pond, state, @value ->
         state
+
       pond, @idle, value ->
         pond.(value)
+
       pond, acc, value ->
         pond.(reducer.(acc, value))
     end)
@@ -203,9 +209,9 @@ defmodule Pond.Acc do
     pond(initial_value, fn
       _pond, state, @value ->
         state
+
       pond, acc, value ->
         pond.(reducer.(acc, value))
     end)
   end
-
 end

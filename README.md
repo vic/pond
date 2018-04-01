@@ -1,13 +1,14 @@
-# Pond - State aware Elixir functions without spawning processes.
+# Pond, James Pond.
+
+Pond is an Elixir library for creating state handling functions without spawning processes.
 
 [![Travis](https://img.shields.io/travis/vic/pond.svg)](https://travis-ci.org/vic/pond)
 [![Hex.pm](https://img.shields.io/hexpm/v/pond.svg?style=flat-square)](https://hexdocs.pm/pond)
 
-
 ![Monet](https://upload.wikimedia.org/wikipedia/commons/4/43/Claude_Monet_-_Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg)
 
-Pond is an Elixir library for creating functions that are able to keep state between 
-invocations while still being functionally pure.
+Pond functions are same-process, referentially transparent functions, that let you implement
+Finite State Machines, Generators, (push/pull) Reactive Streams, etc.
 
 Pond functions don't require you to spawn a new process ala GenServer, GenStage, etc.
 However a pond function can easily be part of them when needed just like any other function.
@@ -215,7 +216,8 @@ iex> alias Pond.Acc
 [1, 2]
 ```
 
-As you see, we combine the generator with an state accumulator, in this case `Acc.list()`.
+Before calling `next`, we combine our generator with an state accumulator, 
+in this case `Acc.list()`.
 Calling `Acc.value()` at the end will extract the current value from the state accumulator.
 
 `Pond.Acc` accumulators are just *pond*s themselves, and you can use them as reference if
@@ -332,7 +334,7 @@ for each combinator.
 ```elixir
 def deps do
   [
-    {:pond, "~> 0.1"}
+    {:pond, "~> 0.2"}
   ]
 end
 ```
