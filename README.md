@@ -1,4 +1,4 @@
-# Pond, James Pond.
+# Pond
 
 Pond is an Elixir library for creating state handling functions without spawning processes.
 
