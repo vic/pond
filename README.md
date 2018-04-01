@@ -8,7 +8,7 @@ Pond is an Elixir library for creating state handling functions without spawning
 ![Monet](https://upload.wikimedia.org/wikipedia/commons/4/43/Claude_Monet_-_Reflections_of_Clouds_on_the_Water-Lily_Pond.jpg)
 
 Pond functions are same-process, referentially transparent functions, that let you implement
-Finite State Machines, Generators, (push/pull) Reactive Streams, etc.
+Finite State Machines, Generators, (push/pull) Reactive Streams.
 
 Pond functions don't require you to spawn a new process ala GenServer, GenStage, etc.
 However a pond function can easily be part of them when needed just like any other function.
@@ -17,7 +17,7 @@ However a pond function can easily be part of them when needed just like any oth
 
 Spawning a new process just to keep state is not always a good idea.
 
-Dont get me wrong, one of the *best* features of the BEAM is that it's very cheap
+Dont get me wrong, one of the *best* power features of the BEAM is that it's very cheap
 to create tons of processes and supervise them.
 
 However abusing spawn, just because you want to keep state, well, that's certainly 
@@ -25,20 +25,21 @@ not the smartest thing. If you created zillions of tiny processes all data betwe
 would actually be duplicated on each message pass, since processes prefer to share nothing, 
 messages get copied between them when sent.
 
-Think about the *Server* part in _GenServer_, it sounds like something intended
-to be used by many *clients* something much more complex than just maintaining state.
+Use spawn, `GenServer` and friends when you want to do async/concurrent jobs, or provide 
+services that can handle many clients at the same time and orchestrate communication
+between them.
 
 Some useful resources:
 
-[spawn or not](http://theerlangelist.com/article/spawn_or_not)
+[To spawn, or not to spawn?](http://theerlangelist.com/article/spawn_or_not)
 
-[fsm](https://github.com/sasa1977/fsm)
+[sasa1977/fsm](https://github.com/sasa1977/fsm)
 
 [python generators thread on EF](https://elixirforum.com/t/python-generators-equivalent/2806/10)
 
 ## `import Pond`
 
-A *pond* is created by combining an initial state and a function.
+A *pond* is created by combining an initial state and a hanler function.
 
 `pond/2` returns a function that can be invoked without explicitly
 giving a state to it. If you are curious about how it's done, 
@@ -62,7 +63,7 @@ doing much with the state, except returning it at first invocation.
 
 ##### Hello World
 
-Let's create another function that can alter it's own internal state:
+Let's create another function that can alter it's own internal state.
 
 ```elixir
 iex> f = pond(:hello, fn 
@@ -85,34 +86,35 @@ Since Elixir is a functional language, you can see that calling `f.()`
 will return a tuple with the current state and the next function to
 be called (a *pond* with updated state).
 
-Updating the state is done by calling the current pond with a new state.
+Updating the state is done inside the handler function 
+by calling the current pond with a new state.
 In our example, when `state = :hello`, the next function is built
 by changing the state to `:world`, in `pond.(:world)`.
 
 The last line of our example shows that once we are in the `:world`
 state, it wont change anymore.
 
-As you can see, our functions are actually pure, it's just that we 
+If you look closely, our handler function is actually just a 
+single-function finite state machine.
+
+As you can see, our functions are pure, it's just that we 
 are getting an *updated function* to call the next time. Exactly
 the same as when you `Map.put` something and get a *new* map. The nice
 thing about this is, the state is managed internally by the pond
-itself and for the user the state is abstracted away.
+itself and it's abstracted away for the user.
 
 ### Elixir Generators
 
 Let's create a function that cycles a list of ints but on every cycle
 increments the number of decimal positions.
 
-In the code bellow, note that the `[]` stop condition creates a new pond
-increasing `m` and automatically calls it:
-
 ```elixir
 def growing(ints) do
   pond({ints, 1}, fn
+    pond, {[n], m}  ->
+      { n * m, pond.({ints, m * 10}) }
     pond, {[n | rest], m}  ->
       { n * m, pond.({rest, m}) }
-    pond, {[], m} ->
-      pond.({ints, m * 10}).()
   end)
 end
 ```
@@ -189,16 +191,12 @@ iex> import Pond.Next
 ### Piping with State Accumulators
 
 In our last example, calling the `reduce` pond will return another
-function for except when called with `:halt`.
+function, except when called with `:halt`.
 That's why we could pipe every function using `Pond.Next`.
 
 However other functions can return not only the next function but also
 the current state, like for example our previous `growing` generator.
 It will return tuples like `{value, next_fun}`. 
-
-The `Pond.Acc.into/2` function creates a tuple `{acc_fun, next_fun}`, that
-implement the `Pond.Applicative` protocol. Any data structure implementing
-Applicative is able to be piped naturally using `Pond.Next` functions.
 
 For example, let's pipe only two calls to our `growing` generator and accumulate its
 values into a list.
@@ -219,6 +217,10 @@ iex> alias Pond.Acc
 Before calling `next`, we combine our generator with an state accumulator, 
 in this case `Acc.list()`.
 Calling `Acc.value()` at the end will extract the current value from the state accumulator.
+
+The `Pond.Acc.into/2` function creates a tuple `{acc_fun, next_fun}`, that
+implement the `Pond.Applicative` protocol. Any data structure implementing
+Applicative is able to be piped naturally using `Pond.Next` functions.
 
 `Pond.Acc` accumulators are just *pond*s themselves, and you can use them as reference if
 you really need to create your own state accumulators.

@@ -4,11 +4,10 @@ defmodule Pond.Readme do
 
   def growing(ints) do
     pond({ints, 1}, fn
+      pond, {[n], m} ->
+        {n * m, pond.({ints, m * 10})}
       pond, {[n | rest], m} ->
         {n * m, pond.({rest, m})}
-
-      pond, {[], m} ->
-        pond.({ints, m * 10}).()
     end)
   end
 

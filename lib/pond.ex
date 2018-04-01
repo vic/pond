@@ -6,12 +6,12 @@ defmodule Pond do
   @moduledoc File.read!(@readme)
 
   @doc ~S"""
-  Create a *pond* from an initial state and a handler function.
+  Create a *pond* from an initial state and an `app` handler function.
 
-  The function returned by `pond/2` is just `func` with its
+  The function returned by `pond/2` is just `app` with its
   first two arguments already applied.
 
-  That is, `func`'s minimal arity is 2.
+  That is, `app`'s minimal arity is 2.
 
   All remaining arguments are supplied by the user when calling
   the result of `pond/2`.
@@ -30,6 +30,10 @@ defmodule Pond do
       ...> :erlang.fun_info(f, :arity)
       {:arity, 0}
 
+
+  In most cases `app` will just be a function. But ponds
+  can be created from anything that be applied some
+  arguments to it (by implementing `Pond.Applicative`).
   """
   @spec pond(state :: any(), app :: App.t()) :: function()
   def pond(state, app) do

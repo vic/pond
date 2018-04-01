@@ -14,7 +14,7 @@ defmodule Pond.App do
   @doc ~S"""
   Returns the number of arguments that an applicative can take.
   """
-  @spec arity(t()) :: integer()
+  @spec arity(t()) :: non_neg_integer()
   def arity(app), do: Applicative.arity(app)
 
   @doc ~S"""
@@ -44,7 +44,7 @@ defprotocol Pond.Applicative do
   @typedoc "Anything implementing the `Pond.Applicative` protocol"
   @type t :: term()
 
-  @spec arity(t()) :: integer()
+  @spec arity(t()) :: non_neg_integer()
   def arity(app)
 
   @spec apply(t(), list()) :: term()
