@@ -40,14 +40,15 @@ defmodule Pond do
 
   def pond(state, app) do
     arity = App.arity(app)
-    pond_fix(arity, app).(state)
+    fun = App.to_fun(app)
+    pond_fix(arity, fun).(state)
   end
 
-  defp pond_fix(arity, app) when arity > 1 do
+  defp pond_fix(arity, fun) when arity > 1 do
     arity = arity - 2
 
     fix = fn fix ->
-      fn state -> pond_fun(arity, App.to_fun(app), fix.(fix), state) end
+      fn state -> pond_fun(arity, fun, fix.(fix), state) end
     end
 
     fix.(fix)
