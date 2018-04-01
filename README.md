@@ -219,16 +219,8 @@ in this case `Acc.list()`.
 Calling `Acc.value()` at the end will extract the current value from the state accumulator.
 
 The `Pond.Acc.into/2` function creates a tuple `{acc_fun, next_fun}`, that
-implement the `Pond.Applicative` protocol. Any data structure implementing
-Applicative is able to be piped naturally using `Pond.Next` functions.
-
-`Pond.Acc` accumulators are just *pond*s themselves, and you can use them as reference if
-you really need to create your own state accumulators.
-
-If your functions happen to return things other than just a function or a `{state, next_fun}`
-tuple, and you want to pipe using `next`, all you need is to make your result structure 
-implement the `Pond.Applicative` protocol.
-
+implements the `Pond.Applicative` protocol. Any data structure implementing
+`Pond.Applicative` is able to be piped naturally using `Pond.Next` functions.
 
 ### Elixir Callbags
 
@@ -238,7 +230,7 @@ fast pull/push streams on JavaScript land.
 Callbags are simple functions that following a communication protocol
 between them can implement the so-called, *reactive programming* paradigm.
 
-Callbags are also being ported to other [platforms](https://github.com/kitten/wonka),
+Callbags are also being ported to other [languages](https://github.com/kitten/wonka),
 since callbags have no core-library, and let you achieve the same *reactivity*
 without requiring full libraries like Rx and friends.
 
