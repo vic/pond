@@ -47,7 +47,7 @@ defmodule Pond do
     arity = arity - 2
 
     fix = fn fix ->
-      fn state -> pond_fun(arity, app, fix.(fix), state) end
+      fn state -> pond_fun(arity, App.to_fun(app), fix.(fix), state) end
     end
 
     fix.(fix)
@@ -56,13 +56,9 @@ defmodule Pond do
   Enum.map(0..10, fn arity ->
     args = Macro.generate_arguments(arity, __MODULE__)
 
-    defp pond_fun(unquote(arity), app, fix, state) do
-      fn
-        unquote_splicing(args) when is_function(app, unquote(arity)) ->
-          app.(fix, state, unquote_splicing(args))
-
-        unquote_splicing(args) ->
-          App.apply(app, [fix, state, unquote_splicing(args)])
+    defp pond_fun(unquote(arity), fun, fix, state) do
+      fn unquote_splicing(args) ->
+        fun.(fix, state, unquote_splicing(args))
       end
     end
   end)
