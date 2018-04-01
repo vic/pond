@@ -52,8 +52,11 @@ defmodule Pond do
     args = Macro.generate_arguments(arity, __MODULE__)
 
     defp pond_fun(unquote(arity), app, fix, state) do
-      fn unquote_splicing(args) ->
-        App.apply(app, [fix, state, unquote_splicing(args)])
+      fn
+        unquote_splicing(args) when is_function(app, unquote(arity)) ->
+          app.(fix, state, unquote_splicing(args))
+        unquote_splicing(args) ->
+          App.apply(app, [fix, state, unquote_splicing(args)])
       end
     end
   end)

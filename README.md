@@ -187,16 +187,17 @@ iex> import Pond.Next
 
 ### Piping with State Accumulators
 
-If you noticed in our last example, calling the `reduce` pond will always return another
-function (except when called with `:halt`).
+In our last example, calling the `reduce` pond will return another
+function for except when called with `:halt`.
 That's why we could pipe every function using `Pond.Next`.
 
-However other functions can also return a current value, like our previous `growing` example,
-that will return tuples like `{value, next_fun}`. 
+However other functions can return not only the next function but also
+the current state, like for example our previous `growing` generator.
+It will return tuples like `{value, next_fun}`. 
 
-The `Pond.Acc.into/2` function creates a tuple `{acc_pond, next_pond}`, and these tuples 
-implement the `Pond.Applicative` protocol.
-Pond Applicatives are able to be piped naturally using `Pond.Next` functions.
+The `Pond.Acc.into/2` function creates a tuple `{acc_fun, next_fun}`, that
+implement the `Pond.Applicative` protocol. Any data structure implementing
+Applicative is able to be piped naturally using `Pond.Next` functions.
 
 For example, let's pipe only two calls to our `growing` generator and accumulate its
 values into a list.

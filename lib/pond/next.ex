@@ -60,6 +60,12 @@ defmodule Pond.Next do
   Enum.map(0..10, fn arity ->
     args = Macro.generate_arguments(arity, __MODULE__)
     @doc if arity > 0, do: @doc_next, else: @doc_next1
+    def next(app, unquote_splicing(args))
+
+    def next(app, unquote_splicing(args)) when is_function(app, unquote(arity)) do
+      app.(unquote_splicing(args))
+    end
+
     def next(app, unquote_splicing(args)) do
       Pond.App.apply(app, unquote(args))
     end
