@@ -2,7 +2,7 @@ defmodule Pond.Acc do
   import Pond
 
   @idle {__MODULE__, :idle}
-  @value {__MODULE__, :value}
+  @halt {__MODULE__, :halt}
 
   @moduledoc ~S"""
   Functions for accumulating state.
@@ -87,11 +87,11 @@ defmodule Pond.Acc do
   def value(acc)
 
   def value({acc, _pond}) when is_function(acc, 1) do
-    acc.(@value)
+    acc.(@halt)
   end
 
   def value(acc) when is_function(acc, 1) do
-    acc.(@value)
+    acc.(@halt)
   end
 
   @doc ~S"""
@@ -105,10 +105,10 @@ defmodule Pond.Acc do
   @spec list() :: acc_pond()
   def list do
     pond(@idle, fn
-      _pond, @idle, @value ->
+      _pond, @idle, @halt ->
         []
 
-      _pond, state, @value ->
+      _pond, state, @halt ->
         state |> Enum.reverse()
 
       pond, @idle, state ->
@@ -141,10 +141,10 @@ defmodule Pond.Acc do
   @spec last() :: acc_pond()
   def last do
     pond(@idle, fn
-      _pond, @idle, @value ->
+      _pond, @idle, @halt ->
         nil
 
-      _pond, state, @value ->
+      _pond, state, @halt ->
         state
 
       pond, _state, value ->
@@ -172,10 +172,10 @@ defmodule Pond.Acc do
   @spec reduce(reducer()) :: acc_pond()
   def reduce(reducer) do
     pond(@idle, fn
-      _pond, @idle, @value ->
+      _pond, @idle, @halt ->
         nil
 
-      _pond, state, @value ->
+      _pond, state, @halt ->
         state
 
       pond, @idle, value ->
@@ -207,7 +207,7 @@ defmodule Pond.Acc do
   @spec reduce(reducer(), initial_value :: term()) :: acc_pond()
   def reduce(reducer, initial_value) do
     pond(initial_value, fn
-      _pond, state, @value ->
+      _pond, state, @halt ->
         state
 
       pond, acc, value ->
